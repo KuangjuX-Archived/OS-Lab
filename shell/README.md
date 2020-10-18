@@ -1,8 +1,8 @@
 # Shell
 ## Get Staretd
 **compile:**
-make
+make<br>
 **Run:**
-make run
+make run<br>
 **clean**
-make clean
+make clean<br>
