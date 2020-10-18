@@ -64,6 +64,13 @@ void runcmd(struct cmd *cmd)
     //fprintf(stderr, "exec not implemented\n");
     // Your code here ...
     // execute command
+    // int i;
+    // for(i=0;i<MAXARGS;i++){
+    //   int j;
+    //   for(j=0;j<strlen(ecmd->argv[i]);j++){
+    //     printf("%c\n",ecmd->argv[i][j]);
+    //   }
+    // }
     pid_t pid,w;
     pid =  fork();
     int status;
@@ -75,20 +82,7 @@ void runcmd(struct cmd *cmd)
       w = wait(&status);
     }else if(pid == 0){
       //child process
-
-      int i;
-      i=0;
-      char* params[MAXARGS];
-      while(ecmd->argv[i]){
-        params[i] = ecmd->argv[i];
-        i++;
-      }
-
-      params[i] = NULL;
-
-      ecmd->argv[i] = NULL;
-      execvp(ecmd->argv[0],params);
-
+      execvp(ecmd->argv[0],ecmd->argv);
       exit(0);
     }
     break;
@@ -98,7 +92,7 @@ void runcmd(struct cmd *cmd)
     rcmd = (struct redircmd*)cmd;
     //fprintf(stderr, "redir not implemented\n");
     // Your code here ...
-    printf("\n");
+    //printf("\n");
     pid_t pid_2;
     pid_2 = fork();
     int status_2;
@@ -164,14 +158,14 @@ void runcmd(struct cmd *cmd)
       close(1);
       dup(p[1]);
       close(p[0]);
-      close(p[1]);
+      //close(p[1]);
       runcmd(pcmd->left);
     }
 
     if(fork1() == 0){
       close(0);
       dup(p[0]);
-      close(p[0]);
+      //close(p[0]);
       close(p[1]);
       runcmd(pcmd->right);
     }
@@ -185,47 +179,45 @@ void runcmd(struct cmd *cmd)
   _exit(0);
 }
 
-void runpipecmd(char* file_name,struct cmd* right){
-    struct execcmd *ecmd;
-    struct pipecmd *pcmd;
-    // struct redircmd *rcmd;
-    printf("%d\n",right->type);
-    if(right->type == 32){
-      printf("hello2\n");
-      ecmd = (struct execcmd*)right;
-      int i;
-      i=0;
-      while(ecmd->argv[i] != NULL){
-        i++;
-      }
-      ecmd->argv[i] = file_name;
-      ecmd->argv[i+1] = NULL;
-      execvp(ecmd->argv[0],ecmd->argv);
+// void runpipecmd(char* file_name,struct cmd* right){
+//     struct execcmd *ecmd;
+//     struct pipecmd *pcmd;
+//     // struct redircmd *rcmd;
+//     printf("%d\n",right->type);
+//     if(right->type == 32){
+//       printf("hello2\n");
+//       ecmd = (struct execcmd*)right;
+//       int i;
+//       i=0;
+//       while(ecmd->argv[i] != NULL){
+//         i++;
+//       }
+//       ecmd->argv[i] = file_name;
+//       ecmd->argv[i+1] = NULL;
+//       execvp(ecmd->argv[0],ecmd->argv);
       
-    }else if(right->type == 124){
-      pcmd = (struct pipecmd*)right;
-      // printf("%d\n",pcmd->left->type);
-      // printf("%d\n",pcmd->right->type);
-      pid_t pid;
-      pid = fork();
-      if(pid == 0){
-        close(1);
-        int fd1,fd2,fd3;
-        fd1 = open(file_name,O_CREAT|O_RDWR,0644);
-        fd2 = dup2(fd1,1);
-        runcmd(pcmd->left);
-        fd3 = dup2(fd1,1);
-        close(fd1);
-        exit(0);
+//     }else if(right->type == 124){
+//       pcmd = (struct pipecmd*)right;
+//       pid_t pid;
+//       pid = fork();
+//       if(pid == 0){
+//         close(1);
+//         int fd1,fd2,fd3;
+//         fd1 = open(file_name,O_CREAT|O_RDWR,0644);
+//         fd2 = dup2(fd1,1);
+//         runcmd(pcmd->left);
+//         fd3 = dup2(fd1,1);
+//         close(fd1);
+//         exit(0);
 
-      }else if(pid > 0){
-        wait(NULL);
-        runpipecmd(file_name,pcmd->right);
-      }else if(pid == -1){
-        printf("fork error\n");
-      }
-    }
-}
+//       }else if(pid > 0){
+//         wait(NULL);
+//         runpipecmd(file_name,pcmd->right);
+//       }else if(pid == -1){
+//         printf("fork error\n");
+//       }
+//     }
+// }
 
 int getcmd(char *buf, int nbuf)
 {

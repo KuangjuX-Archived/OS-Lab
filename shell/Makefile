@@ -3,4 +3,8 @@ sh:sh.c
 
 .PHONY:clean
 clean:
-		rm -rf sh
+	rm -rf sh
+
+.PHONY:run
+run:
+	./sh
