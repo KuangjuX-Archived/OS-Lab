@@ -63,14 +63,6 @@ void runcmd(struct cmd *cmd)
       _exit(0);
     //fprintf(stderr, "exec not implemented\n");
     // Your code here ...
-    // execute command
-    // int i;
-    // for(i=0;i<MAXARGS;i++){
-    //   int j;
-    //   for(j=0;j<strlen(ecmd->argv[i]);j++){
-    //     printf("%c\n",ecmd->argv[i][j]);
-    //   }
-    // }
     pid_t pid,w;
     pid =  fork();
     int status;
@@ -93,24 +85,33 @@ void runcmd(struct cmd *cmd)
     //fprintf(stderr, "redir not implemented\n");
     // Your code here ...
     //printf("\n");
-    pid_t pid_2;
-    pid_2 = fork();
-    int status_2;
-    if(pid_2 == 0){
-      close(1);
-      int fd1,fd2,fd3;
-      fd1 = open(rcmd->file,O_CREAT|O_RDWR,0644);
-      fd2 = dup2(fd1,1);
-      runcmd(rcmd->cmd);
-      fd3 = dup2(fd1,1);
-      close(fd1);
-      exit(0);
-    }else if(pid_2 > 0){
-        wait(&status_2);
-    }else if(pid_2 == -1){
-        printf("fork error\n");
-        exit(1);
+    // pid_t pid_2;
+    // pid_2 = fork();
+    // int status_2;
+    // if(pid_2 == 0){
+    //   close(1);
+    //   int fd1,fd2,fd3;
+    //   fd1 = open(rcmd->file,O_CREAT|O_RDWR,0644);
+    //   fd2 = dup2(fd1,1);
+    //   runcmd(rcmd->cmd);
+    //   fd3 = dup2(fd1,1);
+    //   close(fd1);
+    //   exit(0);
+    // }else if(pid_2 > 0){
+    //     wait(&status_2);
+    // }else if(pid_2 == -1){
+    //     printf("fork error\n");
+    //     exit(1);
+    // }
+
+    close(rcmd->fd);
+    int fd1;
+    if(fd1=open(rcmd->file,O_CREAT|O_RDWR,0644)<0){
+      fprintf(stderr,"open %s failed\n",rcmd->file);
+      exit(1);
     }
+    dup(fd1);
+    runcmd(rcmd->cmd);
     break;
 
   case '|':
