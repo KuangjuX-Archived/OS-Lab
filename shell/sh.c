@@ -72,6 +72,9 @@ void runcmd(struct cmd *cmd)
     }else if(pid > 0){
       //parent process
       w = wait(&status);
+      if(!WIFEXITED(status)){
+        fprintf(stderr,"Child process pid= %d exit abnormally.\n",w);
+      }
     }else if(pid == 0){
       //child process
       execvp(ecmd->argv[0],ecmd->argv);
