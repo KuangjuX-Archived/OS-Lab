@@ -3,11 +3,31 @@
 #include <malloc.h>
 #include <time.h>
 #include <sys/time.h>
+#include <string.h>
 long long int n,t;
 long double pi;
 pthread_mutex_t lock;
+const long double TimeCovert = 1e6;
 
-
+char* read(){
+    char* status =(char*)(malloc)(sizeof(char)*100);
+    int i;
+    i=0;
+    char c;
+    c=getchar();
+    //printf("%d \n",c);
+    while(c=='\n'){
+        c=getchar();
+        continue;
+    }
+    while(c!='\n' && c!=EOF){
+        status[i]=c;
+        i++;
+        c=getchar();
+    }
+    status[i] = '\0';
+    return status;
+}
 
 void *thread_compute(void* ID){
     int id = (int) ID;
@@ -28,7 +48,14 @@ void *thread_compute(void* ID){
 }
 
 int main(){
+    char* status;
+    printf("Please enter 'quit' if you want exit else programme "
+    "continue: \n");
+    status = read();
+
+    while(strcmp(status,"quit")!=0){
     pi=0;
+    printf("Please enter N and T: \n");
     scanf("%lld %lld",&n,&t);
     struct timeval start_time,end_time;
     gettimeofday(&start_time,NULL);
@@ -46,7 +73,20 @@ int main(){
     gettimeofday(&end_time,NULL);
 
     printf("pi: %.10LF\n",pi);
-    printf("Required time is %d.%d s\n",(int)(end_time.tv_sec-start_time.tv_sec),(int)(end_time.tv_usec-start_time.tv_usec));
+    long long int start,end;
+    start = start_time.tv_sec*TimeCovert+start_time.tv_usec;
+    end = end_time.tv_sec*TimeCovert+end_time.tv_usec;
+    long double span_time;
+    span_time = (end-start)/((double)TimeCovert);
+
+    printf("Required time is %.6LFs\n",span_time);
+
+    //judge when end of output
+
+    printf("Please enter 'quit' if you want exit else programme "
+    "continue: \n");
+    status = read();
+    }
 
     return 0;
     
