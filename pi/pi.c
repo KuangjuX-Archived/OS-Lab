@@ -15,7 +15,6 @@ char* read(){
     i=0;
     char c;
     c=getchar();
-    //printf("%d \n",c);
     while(c=='\n'){
         c=getchar();
         continue;
@@ -77,7 +76,7 @@ int main(){
     start = start_time.tv_sec*TimeCovert+start_time.tv_usec;
     end = end_time.tv_sec*TimeCovert+end_time.tv_usec;
     long double span_time;
-    span_time = (end-start)/((double)TimeCovert);
+    span_time = (end-start)/(TimeCovert);
 
     printf("Required time is %.6LFs\n",span_time);
 
