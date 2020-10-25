@@ -2,13 +2,10 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <time.h>
+#include <sys/time.h>
 long long int n,t;
 long double pi;
 pthread_mutex_t lock;
-struct params{
-    int n;
-    int t;
-} ;
 
 
 
@@ -31,9 +28,11 @@ void *thread_compute(void* ID){
 }
 
 int main(){
-    time_t start_time = time(NULL);
     pi=0;
     scanf("%lld %lld",&n,&t);
+    //time_t start_time = time(NULL);
+    struct timeval start_time,end_time;
+    gettimeofday(&start_time,NULL);
     pthread_t* threads;
     threads = (pthread_t*)malloc(sizeof(pthread_t)*t);
     int i;
@@ -45,10 +44,11 @@ int main(){
         pthread_join(threads[i],NULL);
     }
 
-    time_t end_time = time(NULL);
+    //time_t end_time = time(NULL);
+    gettimeofday(&end_time,NULL);
 
     printf("pi: %.10LF\n",pi);
-    printf("Required time is %d s\n",(int)(end_time-start_time));
+    printf("Required time is %d.%d s\n",(int)(end_time.tv_sec-start_time.tv_sec),(int)(end_time.tv_usec-start_time.tv_usec));
 
     return 0;
     
