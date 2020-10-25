@@ -30,7 +30,6 @@ void *thread_compute(void* ID){
 int main(){
     pi=0;
     scanf("%lld %lld",&n,&t);
-    //time_t start_time = time(NULL);
     struct timeval start_time,end_time;
     gettimeofday(&start_time,NULL);
     pthread_t* threads;
@@ -44,7 +43,6 @@ int main(){
         pthread_join(threads[i],NULL);
     }
 
-    //time_t end_time = time(NULL);
     gettimeofday(&end_time,NULL);
 
     printf("pi: %.10LF\n",pi);
