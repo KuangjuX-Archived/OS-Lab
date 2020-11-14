@@ -85,28 +85,6 @@ void runcmd(struct cmd *cmd)
   case '>':
   case '<':
     rcmd = (struct redircmd*)cmd;
-    //fprintf(stderr, "redir not implemented\n");
-    // Your code here ...
-    //printf("\n");
-    // pid_t pid_2;
-    // pid_2 = fork();
-    // int status_2;
-    // if(pid_2 == 0){
-    //   close(1);
-    //   int fd1,fd2,fd3;
-    //   fd1 = open(rcmd->file,O_CREAT|O_RDWR,0644);
-    //   fd2 = dup2(fd1,1);
-    //   runcmd(rcmd->cmd);
-    //   fd3 = dup2(fd1,1);
-    //   close(fd1);
-    //   exit(0);
-    // }else if(pid_2 > 0){
-    //     wait(&status_2);
-    // }else if(pid_2 == -1){
-    //     printf("fork error\n");
-    //     exit(1);
-    // }
-
     close(rcmd->fd);
     int fd1;
     if(fd1=open(rcmd->file,O_CREAT|O_RDWR,0644)<0){
@@ -119,41 +97,7 @@ void runcmd(struct cmd *cmd)
 
   case '|':
     pcmd = (struct pipecmd*)cmd;
-    //fprintf(stderr, "pipe not implemented\n");
-    // Your code here ...
-    // int pipe_f[2],res;
-    // pid_t pid_3;
-    // res = pipe(pipe_f);
-    // if(res == -1){
-    //   printf("Pipe error\n");
-    //   exit(1);
-    // }
-
-    // pid_3 = fork();
-    // if(pid_3 > 0){
-    //   close(pipe_f[1]);
-    //   dup2(pipe_f[0],0);
-    //   wait(NULL);
-    //   char* buf;
-    //   read(pipe_f[0],buf,1000);
-    //   int tmp_file;
-    //   tmp_file = open("tmp.txt",O_CREAT|O_RDWR,0644);
-    //   write(tmp_file,buf,1000);
-    //   // int i=0;
-    //   // for(i=0; i<strlen(buf);i++){
-    //   //   printf("%c",buf[i]);
-    //   // }
-    //   // printf("\n");
-    //   runpipecmd("tmp.txt",pcmd->right);
-
-    // }else if(pid_3 == 0){
-    //   dup2(pipe_f[1],1);
-    //   close(pipe_f[0]);
-    //   runcmd(pcmd->left);
-    //   exit(0);
-    // }else if(pid_3 == -1){
-    //   printf("fork error\n");
-    // }
+  
   
     if(pipe(p)<0){
       printf("pipe error\n");
@@ -182,46 +126,6 @@ void runcmd(struct cmd *cmd)
   }
   _exit(0);
 }
-
-// void runpipecmd(char* file_name,struct cmd* right){
-//     struct execcmd *ecmd;
-//     struct pipecmd *pcmd;
-//     // struct redircmd *rcmd;
-//     printf("%d\n",right->type);
-//     if(right->type == 32){
-//       printf("hello2\n");
-//       ecmd = (struct execcmd*)right;
-//       int i;
-//       i=0;
-//       while(ecmd->argv[i] != NULL){
-//         i++;
-//       }
-//       ecmd->argv[i] = file_name;
-//       ecmd->argv[i+1] = NULL;
-//       execvp(ecmd->argv[0],ecmd->argv);
-      
-//     }else if(right->type == 124){
-//       pcmd = (struct pipecmd*)right;
-//       pid_t pid;
-//       pid = fork();
-//       if(pid == 0){
-//         close(1);
-//         int fd1,fd2,fd3;
-//         fd1 = open(file_name,O_CREAT|O_RDWR,0644);
-//         fd2 = dup2(fd1,1);
-//         runcmd(pcmd->left);
-//         fd3 = dup2(fd1,1);
-//         close(fd1);
-//         exit(0);
-
-//       }else if(pid > 0){
-//         wait(NULL);
-//         runpipecmd(file_name,pcmd->right);
-//       }else if(pid == -1){
-//         printf("fork error\n");
-//       }
-//     }
-// }
 
 int getcmd(char *buf, int nbuf)
 {
